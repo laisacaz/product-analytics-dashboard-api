@@ -25,15 +25,19 @@ src
 └── WebApi
 
 ### Domain
+
 Contains the core business entities and rules.
 
 ### Application
+
 Contains application use cases, services, DTOs and interfaces.
 
 ### Infrastructure
+
 Contains external integrations, database access and authentication implementations.
 
 ### WebApi
+
 Contains controllers, HTTP configuration and API endpoints.
 
 ## License
