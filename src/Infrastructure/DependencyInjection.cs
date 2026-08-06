@@ -10,7 +10,7 @@ namespace Project.Analytics.Dashboard.Infrastructure
             this IServiceCollection services)
         {
             services.AddScoped<IJwtTokenService, JwtTokenService>();
-            services.AddScoped<IGoogleAuthService, IGoogleAuthService>();
+            services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 
             return services;
         }
