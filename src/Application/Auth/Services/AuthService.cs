@@ -5,12 +5,44 @@ namespace Project.Analytics.Dashboard.Application.Auth.Services
 {
     public class AuthService : IAuthService
     {
-        public async Task<LoginResponseDTO> LoginWithGoogle(GoogleLoginRequestDTO request)
+        private readonly IGoogleAuthService _googleAuthService;
+        private readonly IJwtTokenService _jwtTokenService;
+
+        public AuthService(
+        IGoogleAuthService googleAuthService,
+        IJwtTokenService jwtTokenService)
         {
-            // Implement the logic to handle Google login here
-            // For example, you can validate the Google token, create a user session, etc.
-            // Return a dummy response for now
-            return new LoginResponseDTO();
+            _googleAuthService = googleAuthService;
+            _jwtTokenService = jwtTokenService;
+        }
+
+        public async Task<LoginResponseDTO> LoginWithGoogle(
+            GoogleLoginRequestDTO request)
+        {
+            var googleUser =
+                await _googleAuthService.ValidateToken(request.TokenId);
+
+
+            if (googleUser == null)
+            {
+                throw new Exception("Invalid Google token");
+            }
+
+            var userId = Guid.NewGuid();
+            var accessToken = _jwtTokenService.GenerateToken(userId, googleUser.Email);
+
+            return new LoginResponseDTO
+            {
+                AccessToken = accessToken,
+
+                User = new UserAuthDTO
+                {
+                    Id = userId,
+                    Name = googleUser.Name,
+                    Email = googleUser.Email,
+                    ProfileImage = googleUser.ProfileImage
+                }
+            };
         }
     }
 }
